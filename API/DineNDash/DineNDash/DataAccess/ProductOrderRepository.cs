@@ -95,7 +95,11 @@ namespace DineNDash.DataAccess
 
         internal void Add(ProductOrder newProductOrder)
         {
+            // establishing connection to the database //
             using var db = new SqlConnection(_connectionString);
+
+            // inserting the scaler vairable values into the productOrder table //
+            // setting this to the variable of 'sql' //
 
             var sql = @"INSERT INTO [dbo].[ProductOrders]
                                        ( [orderId]
@@ -106,6 +110,7 @@ namespace DineNDash.DataAccess
                                  VALUES
                               (@orderId, @productId, @productQuantity, @totalCost)";
 
+            // setting the values of the param for the new order to the variable 'parameters'
             var parameters = new
             {
                 OrderId = newProductOrder.OrderId,
@@ -115,6 +120,7 @@ namespace DineNDash.DataAccess
 
             };
 
+            // Executing this query and setting the new productOrder.Id to the created guid id //
             var id = db.ExecuteScalar<Guid>(sql, parameters);
             newProductOrder.Id = id;
         }

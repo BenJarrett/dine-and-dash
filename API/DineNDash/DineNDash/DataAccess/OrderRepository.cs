@@ -35,10 +35,16 @@ namespace DineNDash.DataAccess
             return results;
         }
 
+        // Getting a single order by the Id passed into the params //
         internal Order GetById(Guid id)
         {
+            // Sets up connection with out Database //
             using var db = new SqlConnection(_connectionString);
 
+            // First we are joining the users and orders table. We are doing this by joining Users on the User id and setting that equal to the Order's User id //
+            // Then Joinging the payments table. We are doing this by setting the id of the payment table to the order's payment Id of the orders table //
+            // Then we are saying only select the order info where the order.id is equal to the id passed in the params //
+            // Setting this response to the variable 'orderSql' //
             var orderSql = @"select *
                         from Orders o
 	                        join Users u
@@ -48,11 +54,25 @@ namespace DineNDash.DataAccess
                             WHERE o.id = @id
 	                       ";
 
+            // Setting the response of this query to the 'order' variable //
+            // Using this multi-mapping query with 3 input types to return a single input type of an enumerable of Order and splitting on the scaler variable of id //
             var order = db.Query<Order, User, Payment, Order>(orderSql, Map, new { id = id });
 
             //if (order == null) return null;
 
+            // returning the first order in our query above //
             return order.FirstOrDefault();
+        }
+
+        // Creating a map as a param for the multi-mapping query above //
+        Order Map(Order order, User user, Payment payment)
+        {
+            // setting the user of the order to user //
+            order.User = user;
+            // settin the payment of the order to payment //
+            order.Payment = payment;
+            // returning our order param //
+            return order;
         }
 
         internal IEnumerable<Order> GetCompletedUserOrders(Guid userId, bool completed)
@@ -181,12 +201,6 @@ namespace DineNDash.DataAccess
         }
 
 
-        Order Map(Order order, User user, Payment payment)
-        {
-            order.User = user;
-            order.Payment = payment;
-            return order;
-        }
 
 
 

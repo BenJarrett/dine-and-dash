@@ -31,7 +31,7 @@ namespace DineNDash.Controllers
             return Ok(_productOrderRepository.GetAll());
         }
 
-        // Get Single Produc Order by Id //
+        // Get Single Product Order by Id //
         [HttpGet("{id}")]
         public IActionResult GetProductOrderById(Guid id)
         {
@@ -78,9 +78,11 @@ namespace DineNDash.Controllers
             return Ok(updatedProductOrder);
 
         }
-        [HttpPost]
+
 
         //Create(Add) Product Order //
+        [HttpPost]
+
         // A product or is the order of the indivual products that make up a full order //
 
         public IActionResult CreateProductOrder(CreateProductOrderCommand command)

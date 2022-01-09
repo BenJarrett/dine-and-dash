@@ -20,16 +20,23 @@ namespace DineNDash.DataAccess
             return products;
         }
 
+        // Gets a single product by their Id //
+
+
         internal Product GetById(Guid id)
         {
+            // establishsd connections to our database //
             using var db = new SqlConnection(_connectionString);
 
+            // Selecting all info of the product that has the matching Id given in the params and setting that response to a variable //
             var sql = @"Select *
                         From Products
                         Where Id = @id";
 
+            // slecting the first product from that response, and setting the two parameters needed for this Query. Setting this to a variable //
             var singleProduct = db.QueryFirstOrDefault<Product>(sql, new { id });
 
+            // returning that variable. AKA our product //
             return singleProduct;
         }
         internal IEnumerable<Product> GetByType(ProductType type)
